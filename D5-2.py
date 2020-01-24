@@ -116,7 +116,6 @@ def memory(Intcode):
                     if int(upgradeAC[parameters10]) is 0:
                         instruction_pointer+=3
                     else:
-                        instruction_pointer+=3
                         instruction_pointer=int(upgradeAC[parameters11])
                         if instruction_pointer>len(Intcode):
                             print('something too big1')
