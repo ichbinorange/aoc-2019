@@ -1,3 +1,5 @@
+import cProfile
+
 def memory(Intcode):
     upgradeAC=Intcode
     instruction_pointer=0
@@ -88,43 +90,47 @@ def memory(Intcode):
     
 with open('D9-data.txt','r') as intcode:
     int_data=intcode.read()
-upgradeAC=list(int_data.split(','))
 
-numerize=[]
-for item in upgradeAC:
-    numerize.append(int(item))
+def start():
+    upgradeAC=list(int_data.split(','))
 
-print(max(numerize),len(numerize))
-for position in range(len(numerize),(max(numerize)+100)):
-    numerize.insert(position,0)
+    numerize=[]
+    for item in upgradeAC:
+        numerize.append(int(item))
 
-# new way to add 0 and become 5-digits
-upgradeAC=[]
-for item in numerize:
-    new_item='%05d' % item
-    upgradeAC.append(new_item)
+    print(max(numerize),len(numerize))
+    for position in range(len(numerize),(max(numerize)+100)):
+        numerize.insert(position,0)
 
-'''old version
-for item in numerize:
-        if int(item)<0:
-            upgradeAC.append(int(item))
-        else:
-            if len(str(item))==1:
-                new_item='0000'+str(item)
-                upgradeAC.append(new_item)
-            elif len(str(item))==2:
-                new_item='000'+str(item)
-                upgradeAC.append(new_item)
-            elif len(str(item))==3:
-                new_item='00'+str(item)
-                upgradeAC.append(new_item)
-            elif len(str(item))==4:
-                new_item='0'+str(item)
-                upgradeAC.append(new_item)
+    # new way to add 0 and become 5-digits
+    upgradeAC=[]
+    for item in numerize:
+        new_item='%05d' % item
+        upgradeAC.append(new_item)
+
+    '''old version
+    for item in numerize:
+            if int(item)<0:
+                upgradeAC.append(int(item))
             else:
-                upgradeAC.append(item)
-'''
-print(len(upgradeAC))
-memory(upgradeAC)
+                if len(str(item))==1:
+                    new_item='0000'+str(item)
+                    upgradeAC.append(new_item)
+                elif len(str(item))==2:
+                    new_item='000'+str(item)
+                    upgradeAC.append(new_item)
+                elif len(str(item))==3:
+                    new_item='00'+str(item)
+                    upgradeAC.append(new_item)
+                elif len(str(item))==4:
+                    new_item='0'+str(item)
+                    upgradeAC.append(new_item)
+                else:
+                    upgradeAC.append(item)
+    '''
+    print(len(upgradeAC))
+    memory(upgradeAC)
 
-intcode.close()
+    intcode.close()
+
+cProfile.run("start()")
