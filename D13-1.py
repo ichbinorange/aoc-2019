@@ -1,9 +1,8 @@
-import cProfile
-
 def memory(Intcode):
     upgradeAC=Intcode
     instruction_pointer=0
     relative_base=0
+    output_pool = []
     while True:
         instruction=upgradeAC[instruction_pointer]
         parameters1=int(upgradeAC[instruction_pointer+1])
@@ -36,7 +35,8 @@ def memory(Intcode):
                 upgradeAC[parameters1+relative_base]=int(ACuser) 
             instruction_pointer+=2
         elif str(instruction)[3:]=='04': 
-            print('opcode 4H0',forH)
+            # print('opcode 4H0',forH)
+            output_pool.append(forH)
             instruction_pointer+=2
         elif str(instruction)[3:]=='05':
             if forH is 0:
@@ -87,50 +87,39 @@ def memory(Intcode):
         else:
             print('Something went wrong.')
             break
-    
-with open('D9-data.txt','r') as intcode:
+    print('The lengh of output:',len(output_pool))
+    print('Output:'+'\n', output_pool)
+
+    block = 0
+    for tile in range(0,len(output_pool),3):
+        if output_pool[tile+2] == 2:
+            block+=1
+        # elif output_pool[tile+2] == 4:
+        #     print('this is ball')       
+    print('Total block number is ',block)
+
+with open('D13-data.txt','r') as intcode:
     int_data=intcode.read()
+arcade_input=list(int_data.split(','))
 
-def start():
-    upgradeAC=list(int_data.split(','))
+numerize=[]
+for item in arcade_input:
+    numerize.append(int(item))
 
-    numerize=[]
-    for item in upgradeAC:
-        numerize.append(int(item))
+# print(max(numerize),len(numerize))
+for position in range(len(numerize),(max(numerize)+100)):
+    numerize.insert(position,0)
 
-    print(max(numerize),len(numerize))
-    for position in range(len(numerize),(max(numerize)+100)):
-        numerize.insert(position,0)
+# new way to add 0 and become 5-digits
+arcade_input=[]
+for item in numerize:
+    new_item='%05d' % item
+    arcade_input.append(new_item)
 
-    # new way to add 0 and become 5-digits
-    upgradeAC=[]
-    for item in numerize:
-        new_item='%05d' % item
-        upgradeAC.append(new_item)
+# print(arcade_input)
+# print(len(arcade_input))
+memory(arcade_input)
 
-    '''old version
-    for item in numerize:
-            if int(item)<0:
-                upgradeAC.append(int(item))
-            else:
-                if len(str(item))==1:
-                    new_item='0000'+str(item)
-                    upgradeAC.append(new_item)
-                elif len(str(item))==2:
-                    new_item='000'+str(item)
-                    upgradeAC.append(new_item)
-                elif len(str(item))==3:
-                    new_item='00'+str(item)
-                    upgradeAC.append(new_item)
-                elif len(str(item))==4:
-                    new_item='0'+str(item)
-                    upgradeAC.append(new_item)
-                else:
-                    upgradeAC.append(item)
-    '''
-    # print(len(upgradeAC))
-    memory(upgradeAC)
+intcode.close()
 
-    intcode.close()
 
-cProfile.run("start()")
